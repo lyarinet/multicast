@@ -1,4 +1,6 @@
-# multicast
+# UDP multicast
+
+#### UDP multicast MPEG-TS streams on Linux
 
 > A most common task for all OTT and IPTV video services is, of course, to encode a group of TV channels. And the most common way you will be receiving channels is MPEG-TS streams via multicast UDP. In this article we have explained some popular tips and tricks for working with UDP multicast MPEG-TS streams on Ubuntu and CentOS. We assume you have a linux server or a workstation with a root (superuser) access and a bunch of multicast streams available in your network.
 
