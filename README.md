@@ -17,7 +17,7 @@ In this URL 233.0.41.102 is called IP address (or host) and 20000 is port. We wi
 Let’s make sure we are actually receiving a stream using [tcpdump](http://www.tcpdump.org/manpages/tcpdump.1.html). You must be `root` to run `tcpdump`. Execute the following command:
 
 ```sh
-> tcpdump -c 10 dst host 233.0.41.102 and port 20000 and multicast
+[root@linux ~]# tcpdump -c 10 dst host 233.0.41.102 and port 20000 and multicast
 ```
 This command tells to capture 10 multicast UDP packets sent to host 233.0.41.102 and port 20000. If the stream is running, you shall get something like:
 
@@ -45,7 +45,7 @@ If you don’t see output and `tcpdump` seems to freeze, you are not receiving m
 An alternative way to check multicast stream is by using `netstat` tool. You also need to be `root` to use it.
 
 ```sh
-> netstat -a -u -n | grep 233.0.41.102:20000
+[root@linux ~]# netstat -a -u -n | grep 233.0.41.102:20000
 ```
 If multicast stream is running, you will see:
 ```sh
@@ -64,19 +64,19 @@ Be advised that by misconfiguring the firewall **you may be unable to access you
 
 Check current status of `ufw`:
 ```sh
-> ufw status
+[root@linux ~]# ufw status
 ```
 
 If `ufw` is active, add rule to enable receiving multicast on specified host and port:
 
 ```sh
-> ufw allow to 233.0.41.102 port 20000 proto udp
+[root@linux ~]# ufw allow to 233.0.41.102 port 20000 proto udp
 ```
 
 You may completely disable `ufw` by typing:
 
 ```sh
-> ufw disable
+[root@linux ~]# ufw disable
 ```
 This will allow all incoming connections which is insecure and really **not recommended.** Use it only for testing purposes for a limited period of time.
 
@@ -88,7 +88,7 @@ More info about ufw: `UFW` on [Ubuntu](https://help.ubuntu.com/community/UFW)
 To check `iptables` status run:
 
 ```sh
-> iptables -L
+[root@linux ~]# iptables -L
 ```
 It will show status and list of the firewall rules. If you have a fresh installation of OS, you should see empty rule chains:
 
@@ -103,7 +103,7 @@ Chain OUTPUT (policy ACCEPT) target     prot opt source               destinatio
 To allow an incoming multicast stream you need to add a rule by running the following command:
 
 ```sh
-> iptables -A INPUT -p udp -d 233.0.41.102 --dport 20000 -j ACCEPT
+[root@linux ~]# iptables -A INPUT -p udp -d 233.0.41.102 --dport 20000 -j ACCEPT
 ```
 Run `iptables` -L again and you will see:
 
@@ -114,7 +114,7 @@ ACCEPT     udp  --  anywhere             233.0.41.102         udp dpt:20000
 `iptables` does not save its status after reboot, so you will need to save newly added rules by typing:
 
 ```sh
-> iptables-save
+[root@linux ~]# iptables-save
 ```
 More info on `iptables:`
 
@@ -125,7 +125,7 @@ More info on `iptables:`
 Sometimes you don’t have list of all multicast streams available. You may get a list of all incoming multicasts quickly by running following simple command:
 
 ```sh
-> sudo tcpdump -n -c 100000 multicast | perl -n -e 'chomp; m/> (\d+.\d+.\d+.\d+).(\d+)/; print "udp://$1:$2\n"' | sort | uniq
+[root@linux ~]# sudo tcpdump -n -c 100000 multicast | perl -n -e 'chomp; m/> (\d+.\d+.\d+.\d+).(\d+)/; print "udp://$1:$2\n"' | sort | uniq
 ```
 It may take some time to capture 100000 packets and produce output — press `Ctrl-C` if you are tired and reduce amount of packets to capture.
 
@@ -147,16 +147,16 @@ To make sure it is an actual MPEG-TS stream and read it parameters refer to the 
 Install `ffmpeg` (on Ubuntu):
 
 ```sh
-> sudo apt-get install ffmpeg
+[root@linux ~]# sudo apt-get install ffmpeg
 ```
 Install `ffmpeg` (on CentOS):
 ```sh
-> sudo yum install ffmpeg
+[root@linux ~]# sudo yum install ffmpeg
 ```
 Use `ffprobe` to check multicast stream:
 
 ```sh
-> ffprobe udp://233.0.41.102:20000
+[root@linux ~]# ffprobe udp://233.0.41.102:20000
 ```
 For a valid MPEG-TS stream you will get something like this:
 
